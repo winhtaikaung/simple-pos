@@ -232,7 +232,7 @@
 
 
 
-        <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+        <div class="drawer-overlay" id="drawer-overlay" onclick="UI.toggleDrawer()"></div>
 
 
         <div id="menuDrawer"
@@ -341,7 +341,7 @@
                             </tfoot>
                         </table>
                         <div class="actions mt-4">
-                            <button onclick="completeCheckout()"
+                            <button onclick="UI.completeCheckout()"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Complete
                                 Checkout</button>
                             <button onclick="startOver()"
@@ -394,40 +394,6 @@
                 </div>
             </div>
         </div>
-
-        <!--  <div id="itemDrawer"
-            class="fixed top-0 right-0 h-full w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
-            <div class="p-6">
-                <h2 id="itemDrawerTitle" class="text-2xl font-semibold mb-4">Add Item</h2>
-                <form id="itemForm">
-                    <div class="mb-4">
-                        <label for="itemId" class="block text-gray-700 text-sm font-bold mb-2">Item ID</label>
-                        <input type="text" id="itemId"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Enter Item ID" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="itemName" class="block text-gray-700 text-sm font-bold mb-2">Item Name</label>
-                        <input type="text" id="itemName"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Enter Item Name" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="itemPrice" class="block text-gray-700 text-sm font-bold mb-2">Item Price</label>
-                        <input type="number" id="itemPrice"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Enter Item Price" required>
-                    </div>
-                    <div class="flex justify-end space-x-2">
-                        <button type="button"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                            onclick="closeItemDrawer()">Cancel</button>
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div> -->
 
         <div id="itemDrawer"
             class="fixed top-0 right-0 h-full w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
@@ -524,9 +490,9 @@
                                 Print Barcode
                             </h3>
                             <div class="mt-2 flex justify-center">
-                                <div id="barcodeModalDisplay">
+                                <svg id="barcodeModalDisplay">
                                     <!-- Barcode will be displayed here -->
-                                </div>
+                                </svg>
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
@@ -579,7 +545,12 @@
                             <button type="button"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
                                 onclick="completePayment()">
-                                OK
+                                Payment Received
+                            </button>
+                            <button type="button"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                onclick="calculateChange()">
+                                Calc
                             </button>
                             <button type="button"
                                 class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
@@ -587,7 +558,7 @@
                                 Cancel
                             </button>
 
-                            <button type="button" onclick="printVoucher()"
+                            <button type="button" onclick="UI.printVoucher()"
                                 class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Print
                                 Voucher</button>
 
@@ -600,7 +571,7 @@
             // --- Application Logic ---
             // --- Data and State ---
             let storedTransactions = localStorage.getItem('transactions');
-            let transactions = [];
+            let transactions = {};
             if (storedTransactions) {
                 transactions = JSON.parse(storedTransactions);
             }
@@ -621,7 +592,7 @@
                     // By Pass Debugging
                     // const data = JSON.parse(event.target.result);
 
-                    const data = { items: [...Array(400)].map((_, i) => ({ "name": `Item ${i + 1}`, "price": Math.floor(Math.random() * (1000 - 100) + 100) / 100 })), users: [...Array(30)].map((_, i) => ({ "name": `user${i + 1}`, "password": `password${i + 1}` })) }
+                    const data = { items: [...Array(10)].map((_, i) => ({ "name": `Item ${i + 1}`, "price": Math.floor(Math.random() * (1000 - 100) + 100) / 100 })), users: [...Array(30)].map((_, i) => ({ "name": `user${i + 1}`, "password": `password${i + 1}` })) }
 
                     if (data.items && data.users) {
                         items = data.items.map((i, idx) => ({ ...i, "id": idx + 1 }));
@@ -729,7 +700,7 @@
 
             // --- User Authentication ---
             function loginUser(username, password) {
-                const user = users.find(user => user.username === username && user.password === password);
+                const user = users.find(user => user.name === username && user.password === password);
                 if (user) {
                     isLoggedIn = true;
                     loggedInUser = username;
@@ -768,29 +739,23 @@
                 items = [...originalItems];
             }
 
-            function viewTransactions() {
-                console.log("Transactions:", transactions);
-                // You can add UI logic here to display the transactions
-                // For example, you can create a modal or a new section to show the data
-                let transactionString = "";
-                for (const date in transactions) {
-                    transactionString += `<h2>${date}</h2>`;
-                    transactions[date].forEach(transaction => {
-                        transactionString += `<p>Transaction ID: ${transaction.id}</p>`;
-                        transactionString += `<ul>`;
-                        const items = transaction.itm.split(',');
-                        items.forEach(item => {
-                            const [id, name, qty, price] = item.split('|');
-                            transactionString += `<li>Item: ${name}, Qty: ${qty}, Price: ${price}</li>`;
-                        });
-                        transactionString += `</ul>`;
-                    });
+            function recordTransaction(cartItems) {
+                const now = new Date();
+                const dateKey = now.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+                const transactionId = Date.now(); // Unique ID for the transaction
+                const transactionItems = cartItems.map(item => `${item.id}|${item.name}|${item.quantity}|${item.price}`).join(',');
+
+                if (!transactions[dateKey]) {
+                    transactions[dateKey] = [];
                 }
-                const printWindow = window.open('', '', 'width=600,height=400');
-                printWindow.document.open();
-                printWindow.document.write(transactionString);
-                printWindow.document.close();
-                printWindow.focus();
+
+                transactions[dateKey].push({
+                    id: transactionId,
+                    itm: transactionItems
+                });
+
+                // Save to local storage
+                localStorage.setItem('transactions', JSON.stringify(transactions));
             }
 
             // --- UI Logic ---
@@ -830,18 +795,30 @@
             function checkLoginStatus() {
                 const { isLoggedIn, dataLoaded } = getLoginStatus();
                 if (!dataLoaded) {
-                    loadDataScreen.classList.remove('hidden');
-                    loginPage.classList.add('hidden');
-                    appContent.classList.add('hidden');
+                    showLoadDataScreen();
                 } else if (!isLoggedIn) {
-                    loadDataScreen.classList.add('hidden');
-                    loginPage.classList.remove('hidden');
-                    appContent.classList.add('hidden');
+                    showLoginPage();
                 } else {
-                    loadDataScreen.classList.add('hidden');
-                    loginPage.classList.add('hidden');
-                    appContent.classList.remove('hidden');
+                    showAppContent();
                 }
+            }
+
+            function showLoadDataScreen() {
+                loadDataScreen.classList.remove('hidden');
+                loginPage.classList.add('hidden');
+                appContent.classList.add('hidden');
+            }
+
+            function showLoginPage() {
+                loadDataScreen.classList.add('hidden');
+                loginPage.classList.remove('hidden');
+                appContent.classList.add('hidden');
+            }
+
+            function showAppContent() {
+                loadDataScreen.classList.add('hidden');
+                loginPage.classList.add('hidden');
+                appContent.classList.remove('hidden');
             }
 
             function toggleMenu() {
@@ -897,7 +874,7 @@
                         const itemDiv = document.createElement('div');
                         itemDiv.className = 'bg-white rounded-lg shadow p-4 flex flex-col justify-between h-120 max-h-fit';
                         itemDiv.innerHTML = `
-        <div onclick="addToCartUI(${index})">
+        <div onclick="UI.addToCart(${index})">
             <h4 class="font-semibold text-gray-800">${item.name}</h4>
             <p class="text-gray-600 text-sm">ID: ${item.id}</p>
             <p class="text-gray-600 text-sm">Price: $${item.price}</p>
@@ -920,8 +897,8 @@
                 <td class="px-3 py-2 text-right">${cartItem.quantity}</td>
                 <td class="px-3 py-2 text-right">$${subtotal}</td>
                 <td class="px-3 py-2 text-center">
-                    <button onclick="editCartItemUI(${cartItem.id})">Edit</button>
-                    <button onclick="deleteCartItemUI(${cartItem.id})">Delete</button>
+                    <button onclick="UI.editCartItem(${cartItem.id})">Edit</button>
+                    <button onclick="UI.deleteCartItem(${cartItem.id})">Delete</button>
                 </td>
             `;
                     cart.appendChild(row);
@@ -945,154 +922,6 @@
 
                 document.getElementById('currentDate').textContent = formattedDate;
                 document.getElementById('currentTime').textContent = formattedTime;
-            }
-
-            // --- Event Handlers ---
-            function loadData() {
-                const fileInput = document.getElementById('initialDataFile');
-                const file = fileInput.files[0];
-                if (file) {
-                    loadJSONData(file, (error, data) => {
-                        if (error) {
-                            alert(error);
-                        } else {
-                            renderItems();
-                            checkLoginStatus();
-                            alert('Data loaded successfully');
-                        }
-                    });
-                }
-            }
-
-            function addItemUI() {
-                const id = prompt('Enter Item ID:');
-                const name = prompt('Enter Item Name:');
-                const price = prompt('Enter Item Price:');
-                if (id && name && price) {
-                    addItem({ id: +id, name, price });
-                    renderItems();
-                }
-            }
-
-            function editItem(index) {
-                setItemEditingIndex(index);
-                openItemDrawer('edit', index);
-            }
-
-            function deleteItem(index) {
-                removeItem(index);
-                renderItems();
-            }
-
-            function addToCartUI(index) {
-                const quantity = 1 //parseInt(prompt('Enter quantity:'), 10);
-                if (!isNaN(quantity) && quantity > 0) {
-                    addToCart(index, quantity);
-                    renderCart();
-                    updateTotalsDisplay();
-                } else {
-                    alert('Invalid quantity');
-                }
-            }
-
-            function editCartItemUI(itemId) {
-                const newQuantity = parseInt(prompt('Enter new quantity:'), 10);
-                if (!isNaN(newQuantity) && newQuantity > 0) {
-                    editCartItem(itemId, newQuantity);
-                    renderCart();
-                    updateTotalsDisplay();
-                } else {
-                    alert('Invalid quantity');
-                }
-            }
-
-            function deleteCartItemUI(itemId) {
-                deleteCartItem(itemId);
-                renderCart();
-                updateTotalsDisplay();
-            }
-
-            function completeCheckout() {
-                openPaymentModal();
-            }
-
-            function startOver() {
-                if (confirm('Are you sure you want to cancel the checkout?')) {
-                    clearCart();
-                    renderCart();
-                    updateTotalsDisplay();
-                }
-            }
-
-            function printVoucher() {
-                const cartRows = document.querySelectorAll('#cart tr');
-                if (cartRows.length === 0) {
-                    alert('No items in cart to print.');
-                    return;
-                }
-
-                let voucherContent = `
-    <div style="font-family: monospace; font-size: 12px;">
-        <h2 style="text-align: center;">Voucher</h2>
-        <hr style="border-top: 1px dashed #000; margin: 5px 0;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="text-align: left; padding-bottom: 5px;">Item</th>
-                    <th style="text-align: right; padding-bottom: 5px;">Qty</th>
-                    <th style="text-align: right; padding-bottom: 5px;">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-`;
-
-                let total = 0;
-                getCartItems().forEach(item => {
-                    const subtotal = (item.price * item.quantity).toFixed(2);
-                    voucherContent += `
-                <tr>
-                    <td style="text-align: left;">${item.name}</td>
-                    <td style="text-align: right;">${item.quantity}</td>
-                    <td style="text-align: right;">$${subtotal}</td>
-                </tr>
-    `;
-                    total += parseFloat(subtotal.slice(1));
-                });
-
-                const { tax, discount, totalAmount } = calculateTotals();
-
-                voucherContent += `
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td style="text-align: left; padding-top: 5px;" colspan="2">Tax:</td>
-                    <td style="text-align: right; padding-top: 5px;">$${tax.toFixed(2)}</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;" colspan="2">Discount:</td>
-                    <td style="text-align: right;">$${discount.toFixed(2)}</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left; font-weight: bold;" colspan="2">Total:</td>
-                    <td style="text-align: right; font-weight: bold;">$${totalAmount.toFixed(2)}</td>
-                </tr>
-            </tfoot>
-        </table>
-        <hr style="border-top: 1px dashed #000; margin: 5px 0;">
-        <p style="text-align: center;">Thank you for your purchase!</p>
-        
-        <p style="text-align: center; margin-top: 5px;">${new Date().toLocaleString()}</p>
-        <p style="text-align: center; margin-top: 10px;">Served by: ${getLoginStatus().loggedInUser}</p>
-    </div>
-`;
-
-                const printWindow = window.open('', '', 'width=300,height=400');
-                printWindow.document.open();
-                printWindow.document.write(voucherContent);
-                printWindow.document.close();
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
             }
 
             function openItemDrawer(mode, index = null) {
@@ -1121,45 +950,6 @@
                 setItemEditingIndex(null);
             }
 
-            function handleItemFormSubmit(event) {
-                event.preventDefault();
-                const id = document.getElementById('itemId').value;
-                const name = document.getElementById('itemName').value;
-                const price = document.getElementById('itemPrice').value;
-                const editingIndex = getItemEditingIndex();
-
-                if (editingIndex !== null) {
-                    updateItem(editingIndex, { id, name, price });
-                } else {
-                    addItem({ id: +id, name, price });
-                }
-                renderItems();
-                closeItemDrawer();
-            }
-
-            function handleItemListSearch() {
-                const searchTerm = itemListSearch.value.toLowerCase();
-                const searchResults = searchItemsFromList(searchTerm);
-                renderItems(searchResults);
-            }
-
-            function handleLoginFormSubmit(event) {
-                event.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                if (loginUser(username, password)) {
-                    checkLoginStatus();
-                } else {
-                    alert('Invalid username or password');
-                }
-            }
-
-            function handlePaymentFormSubmit(event) {
-                event.preventDefault();
-                calculateChange();
-            }
-
             function openPaymentModal() {
                 paymentModal.classList.remove('hidden');
                 paymentInput.value = '';
@@ -1174,55 +964,6 @@
                 paymentModal.classList.add('hidden');
             }
 
-            function calculateChange() {
-                const payment = parseFloat(paymentInput.value);
-                if (isNaN(payment)) {
-                    alert('Please enter a valid payment amount.');
-                    return;
-                }
-                const { totalAmount } = calculateTotals();
-                const change = payment - totalAmount;
-                if (change >= 0) {
-                    changeDisplay.textContent = `Change: $${change.toFixed(2)}`;
-                    // completeCheckoutProcess(); // Removed from here
-                } else {
-                    changeDisplay.textContent = `Insufficient payment. Please add $${Math.abs(change).toFixed(2)} more.`;
-                }
-            }
-
-            function completePayment() {
-                calculateChange(); // Calculate change first
-                if (changeDisplay.textContent.startsWith('Change:')) {
-                    completeCheckoutProcess(); // Only complete if payment is sufficient
-                } else {
-                    alert('Payment is not sufficient.');
-                }
-            }
-            function completeCheckoutProcess() {
-                const now = new Date();
-                const dateKey = now.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
-                const transactionId = Date.now(); // Unique ID for the transaction
-                const transactionItems = cartItems.map(item => `${item.id}|${item.name}|${item.quantity}|${item.price}`).join(',');
-
-                if (!transactions[dateKey]) {
-                    transactions[dateKey] = [];
-                }
-
-                transactions[dateKey].push({
-                    id: transactionId,
-                    itm: transactionItems
-                });
-
-                // Save to local storage
-                localStorage.setItem('transactions', JSON.stringify(transactions));
-
-                alert('Checkout Complete!');
-                cart.innerHTML = '';
-                clearCart();
-                updateTotalsDisplay();
-                closePaymentModal();
-            }
-            // ADDED FUNCTIONS
             function updateBarcodeDisplay(itemId) {
                 barcodeDisplay.innerHTML = '';
                 barcodeItemId.textContent = itemId;
@@ -1276,9 +1017,253 @@
                 printWindow.close();
                 closeBarcodeModal();
             }
-            // END OF ADDED FUNCTIONS
 
-            // --- Event Listeners ---
+            // --- Event Handlers ---
+            function loadData() {
+                const fileInput = document.getElementById('initialDataFile');
+                const file = fileInput.files[0];
+                if (file) {
+                    loadJSONData(file, (error, data) => {
+                        if (error) {
+                            alert(error);
+                        } else {
+                            UI.renderItems();
+                            checkLoginStatus();
+                            alert('Data loaded successfully');
+                        }
+                    });
+                }
+            }
+
+            function handleItemFormSubmit(event) {
+                event.preventDefault();
+                const id = document.getElementById('itemId').value;
+                const name = document.getElementById('itemName').value;
+                const price = document.getElementById('itemPrice').value;
+                const editingIndex = getItemEditingIndex();
+
+                if (editingIndex !== null) {
+                    updateItem(editingIndex, { id, name, price });
+                } else {
+                    addItem({ id: +id, name, price });
+                }
+                UI.renderItems();
+                closeItemDrawer();
+            }
+
+            function handleItemListSearch() {
+                const searchTerm = itemListSearch.value.toLowerCase();
+                const searchResults = searchItemsFromList(searchTerm);
+                UI.renderItems(searchResults);
+            }
+
+            function handleLoginFormSubmit(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                if (loginUser(username, password)) {
+                    checkLoginStatus();
+                } else {
+                    alert('Invalid username or password');
+                }
+            }
+
+            function handlePaymentFormSubmit(event) {
+                event.preventDefault();
+                console.log("event")
+                UI.calculateChange();
+            }
+
+            function calculateChange() {
+                const payment = parseFloat(paymentInput.value);
+                if (isNaN(payment)) {
+                    alert('Please enter a valid payment amount.');
+                    return;
+                }
+                const { totalAmount } = calculateTotals();
+                const change = payment - totalAmount;
+                if (change > 0) {
+                    changeDisplay.textContent = `Change: $${change.toFixed(2)}`;
+
+                } else if (change == 0) {
+                    changeDisplay.textContent = `Complete Payment`;
+                } else {
+                    changeDisplay.textContent = `Insufficient payment. Please add $${Math.abs(change).toFixed(2)} more.`;
+                }
+                return change;
+            }
+
+            function completePayment() {
+                const change = calculateChange(); // Calculate change first
+                if (change >= 0) {
+                    completeCheckoutProcess();
+                } else {
+                    alert('Payment is not sufficient.');
+                }
+            }
+
+            function completeCheckoutProcess() {
+                recordTransaction(cartItems);
+
+                alert('Checkout Complete!');
+                clearCart();
+                UI.renderCart();
+                UI.updateTotalsDisplay();
+                closePaymentModal();
+            }
+
+            // --- UI Object ---
+            const UI = {
+                renderItems: function (itemsToRender) {
+                    renderItems(itemsToRender);
+                },
+                renderCart: function () {
+                    renderCart();
+                },
+                updateTotalsDisplay: function () {
+                    updateTotalsDisplay();
+                },
+                addItem: function () {
+                    const id = prompt('Enter Item ID:');
+                    const name = prompt('Enter Item Name:');
+                    const price = prompt('Enter Item Price:');
+                    if (id && name && price) {
+                        addItem({ id: +id, name, price });
+                        UI.renderItems();
+                    }
+                },
+                editItem: function (index) {
+                    setItemEditingIndex(index);
+                    openItemDrawer('edit', index);
+                },
+                deleteItem: function (index) {
+                    removeItem(index);
+                    UI.renderItems();
+                },
+                addToCart: function (index) {
+                    const quantity = 1 //parseInt(prompt('Enter quantity:'), 10);
+                    if (!isNaN(quantity) && quantity > 0) {
+                        addToCart(index, quantity);
+                        UI.renderCart();
+                        UI.updateTotalsDisplay();
+                    } else {
+                        alert('Invalid quantity');
+                    }
+                },
+                editCartItem: function (itemId) {
+                    const newQuantity = parseInt(prompt('Enter new quantity:'), 10);
+                    if (!isNaN(newQuantity) && newQuantity > 0) {
+                        editCartItem(itemId, newQuantity);
+                        UI.renderCart();
+                        UI.updateTotalsDisplay();
+                    } else {
+                        alert('Invalid quantity');
+                    }
+                },
+                deleteCartItem: function (itemId) {
+                    deleteCartItem(itemId);
+                    UI.renderCart();
+                    UI.updateTotalsDisplay();
+                },
+                completeCheckout: function () {
+                    openPaymentModal();
+                },
+                startOver: function () {
+                    if (confirm('Are you sure you want to cancel the checkout?')) {
+                        clearCart();
+                        UI.renderCart();
+                        UI.updateTotalsDisplay();
+                    }
+                },
+                printVoucher: function () {
+                    const cartRows = document.querySelectorAll('#cart tr');
+                    if (cartRows.length === 0) {
+                        alert('No items in cart to print.');
+                        return;
+                    }
+
+                    let voucherContent = `
+        <div style="font-family: monospace; font-size: 12px;">
+            <h2 style="text-align: center;">Voucher</h2>
+            <hr style="border-top: 1px dashed #000; margin: 5px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding-bottom: 5px;">Item</th>
+                        <th style="text-align: right; padding-bottom: 5px;">Qty</th>
+                        <th style="text-align: right; padding-bottom: 5px;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+                    let total = 0;
+                    getCartItems().forEach(item => {
+                        const subtotal = (item.price * item.quantity).toFixed(2);
+                        voucherContent += `
+                    <tr>
+                        <td style="text-align: left;">${item.name}</td>
+                        <td style="text-align: right;">${item.quantity}</td>
+                        <td style="text-align: right;">$${subtotal}</td>
+                    </tr>
+        `;
+                        total += parseFloat(subtotal.slice(1));
+                    });
+
+                    const { tax, discount, totalAmount } = calculateTotals();
+
+                    voucherContent += `
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td style="text-align: left; padding-top: 5px;" colspan="2">Tax:</td>
+                        <td style="text-align: right; padding-top: 5px;">$${tax.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;" colspan="2">Discount:</td>
+                        <td style="text-align: right;">$${discount.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; font-weight: bold;" colspan="2">Total:</td>
+                        <td style="text-align: right; font-weight: bold;">$${totalAmount.toFixed(2)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <hr style="border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="text-align: center;">Thank you for your purchase!</p>
+            
+            <p style="text-align: center; margin-top: 5px;">${new Date().toLocaleString()}</p>
+            <p style="text-align: center; margin-top: 10px;">Served by: ${getLoginStatus().loggedInUser}</p>
+        </div>
+    `;
+
+                    const printWindow = window.open('', '', 'width=300,height=400');
+                    printWindow.document.open();
+                    printWindow.document.write(voucherContent);
+                    printWindow.document.close();
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                },
+                calculateChange: function () {
+                    calculateChange();
+                }
+            };
+
+            // --- Initialization-- -
+            __loadJsonData((error, data) => {
+                if (error) {
+                    alert(error);
+                } else {
+                    UI.renderItems();
+                    loginUser = "user1"
+                    isLoggedIn = true
+                    checkLoginStatus();
+                    alert('Data loaded successfully');
+                }
+            });
+
             itemForm.addEventListener('submit', handleItemFormSubmit);
             loginForm.addEventListener('submit', handleLoginFormSubmit);
             paymentForm.addEventListener('submit', handlePaymentFormSubmit);
@@ -1286,32 +1271,6 @@
 
             // Loopers
             setInterval(() => updateClock(), 1000);
-
-
-            document.getElementById('itemId').addEventListener('input', function () {
-                clearTimeout(barcodeTimeout);
-                barcodeTimeout = setTimeout(() => {
-                    const itemId = this.value;
-                    if (itemId.trim() === '') {
-                        updateBarcodeDisplay('N.A');
-                    } else {
-                        updateBarcodeDisplay(itemId);
-                    }
-                }, 100);
-            });
-
-            // --- Initialization ---
-            __loadJsonData((error, data) => {
-                if (error) {
-                    alert(error);
-                } else {
-                    renderItems();
-                    loginUser = "user1"
-                    isLoggedIn = true
-                    checkLoginStatus();
-                    alert('Data loaded successfully');
-                }
-            });
             // checkLoginStatus();
 
 
