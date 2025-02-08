@@ -226,6 +226,8 @@
                         class="text-white hover:text-gray-300">Update Item</a>
                     <a href="#remove-item" onclick="navigateTo('#remove-item')"
                         class="text-white hover:text-gray-300">Remove Item</a>
+                    <a href="#transactions" onclick="navigateTo('#transactions')"
+                        class="text-white hover:text-gray-300">Transactions</a>
                 </div>
             </div>
         </header>
@@ -272,6 +274,12 @@
                                 <span class="menu-icon mr-2">❌</span> Remove Item
                             </a>
                         </li>
+                        <li class="mb-2">
+                            <a href="#transactions" onclick="navigateTo('#transactions')"
+                                class="flex items-center hover:text-gray-300">
+                                <span class="menu-icon mr-2">📜</span> Transactions
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -283,7 +291,7 @@
             </button>
         </div>
 
-        <div class="view_container min-w-full min-h-[95vh]">
+        <div class="view_container min-w-full min-h-[70vh]">
             <div class="pos-screen">
                 <div class="cashier-view">
                     <h3 class="text-lg font-semibold mb-2">Cashier View</h3>
@@ -309,7 +317,7 @@
                                 </tr>
                             </thead>
                             <tbody id="cart"
-                                class="bg-white divide-y divide-gray-200 h-[calc(100vh-40vh)] overflow-y-auto">
+                                class="bg-white divide-y divide-gray-200 h-[calc(100vh-50vh)] overflow-y-auto">
                                 <!-- Items added to cart will appear here -->
                             </tbody>
                             <tfoot class="bg-gray-50">
